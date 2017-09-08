@@ -60,3 +60,113 @@ The following points must be met for us to consider this assignment complete:
 Similar to the frontend assignment, we’ll also look at how you’ve solved it. Consider security issues, rewriting code and applying best practices wherever you see fit. But keep in mind that the time limit is 60 minutes.
 
 */
+
+
+
+// they have code already done.need to replace with slider
+
+<?php
+error_reporting(0);
+
+$iConnection = mysql_connect("localhost", "root", "");
+$bSelectedDB = mysql_select_db("calculator", $iConnection);
+
+
+
+/**
+ * @return void
+ */
+function getAverageInterestRate() {
+    $iSumInterest = 0;
+    $iCountInterest = 0;
+
+    $tSQL = "SELECT * FROM interest_rate";
+    $iResult = mysql_query($tSQL);
+    while ($aRow = mysql_fetch_assoc($iResult)) {
+        $iSumInterest += $aRow['interest_rate'];
+        $iCountInterest++;
+    }
+
+    return $iSumInterest / $iCountInterest;
+}
+
+/**
+ * @return void
+ */
+function getSettings() {
+    $tSQL = "SELECT * FROM setting";
+    //if ($_REQUEST['calculator_id']) {
+	if(isset($_REQUEST['calculator_id'])){
+        $tSQL = $tSQL . " WHERE id = " . $_REQUEST['calculator_id'];
+    }
+    $iResult = mysql_query($tSQL);
+    $aSetting = array();
+    while ($aRow = mysql_fetch_assoc($iResult)) {
+        $aSetting = $aRow;
+        break;
+    }
+    return $aSetting;
+}
+
+$iInterestRate = getAverageInterestRate();
+$aSetting = getSettings();
+?>
+<html>
+<head>
+    <title>Calculator</title>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+</head>
+<body>
+    <script>
+        var max_amount = <?=$aSetting['max_amount']?>;
+        var min_amount = <?=$aSetting['min_amount']?>;
+        var default_amount = <?=$aSetting['default_amount']?>;
+        var step_amount = <?=$aSetting['step_amount']?>;
+        var interest = <?=$iInterestRate?>;
+
+        var max_repayment = <?=$aSetting['max_repayment']?>;
+        var min_repayment = <?=$aSetting['min_repayment']?>;
+        var default_repayment = <?=$aSetting['default_repayment']?>;
+        var step_repayment = <?=$aSetting['step_repayment']?>;
+
+        $(document).ready(function() {
+            $('#amount').change(function() {
+                var months = $('#repayment').val() * 12;
+                $('#monthly_cost').val(Math.round($(this).val() * (interest / 100) / 12 / (1 - Math.pow(1 + (interest / 100) / 12, (months * -1)))));
+            });
+
+            $('#repayment').change(function() {
+                var months = $(this).val() * 12;
+                $('#monthly_cost').val(Math.round($('#amount').val() * (interest / 100) / 12 / (1 - Math.pow(1 + (interest / 100) / 12, (months * -1)))));
+            });
+
+            $('#amount').trigger('change');
+        });
+    </script>
+
+    <table>
+        <tr>
+            <th>Amount</th>
+            <td><input type="text" id="amount" value="<?=$aSetting['default_amount']?>"/></td>
+        </tr>
+        <tr>
+            <th>Repayment (years)</th>
+            <td><input type="text" id="repayment" value="<?=$aSetting['default_repayment']?>" /></td>
+        </tr>
+        <tr>
+            <th>Monthly cost</th>
+            <td><input type="text" disabled="" id="monthly_cost" /></td>
+        </tr>
+    </table>
+    <p>Interest rate <?=$iInterestRate?></p>
+</body>
+
+
+
+
+
+
+
+
+
