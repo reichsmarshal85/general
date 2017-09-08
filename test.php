@@ -13,8 +13,17 @@ if ($query) {
 
 
 
-==============================================
- Calculator Test
+/*==============================================
+
+
+EXAMPLE
+-------------
+
+DEAR SEE THIS :- https://codepen.io/hanhpho/pen/pfHCh
+
+-------------------------------------------------
+
+Calculator Test
 
 Description
 
@@ -49,3 +58,5 @@ The following points must be met for us to consider this assignment complete:
 •	The issue with calculator_id must be fixed.
 •	The script must accept calculator_id 1, 2 or no input at all. It should default to calculator_id 1.
 Similar to the frontend assignment, we’ll also look at how you’ve solved it. Consider security issues, rewriting code and applying best practices wherever you see fit. But keep in mind that the time limit is 60 minutes.
+
+*/
